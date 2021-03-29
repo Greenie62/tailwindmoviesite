@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="public/style.css">
+    <title>TailWindMovieApp</title>
+</head>
+<body class='h-screen w-screen bg-black'>
+    <header class="p-2 text-center  md:flex md:align-middle md:justify-evenly">
+        <h1 class="text-3xl text-green-400 md:text-5xl">Tailwind</h1>
+        <h1 class="text-3xl text-green-400 md:text-5xl">Movie</h1>
+        <h1 class="hidden text-5xl md:block">🔥</h1>
+        <h1 class="text-3xl text-green-400 md:text-5xl">Site</h1>
+    </header>
+
+    <div class="h-3/4">
+    
+    <div class="w-1/2 h-3/4 rounded border-2 border-green-400 mx-auto my-5 md:w-3/4 md:h-1/2 md:relative md:top-20 md:flex">
+        <div class='w-full text-center h-1/3 mt-5 md:mt-0 md:h-full'>
+            
+            <label class="text-green-400 md:relative md:top-16" for="username">Username:</label>
+            <input class='outline-none border-2 border-green-400 md:mt-16' type="text" name="username" id="username" placeholder="username..." autocomplete="off">
+        </div>
+        <div class='w-full text-center h-1/3 mt-5 md:mt-0'>
+            <label class="text-green-400 md:relative md:top-16" for="password">Password:</label>
+            <input class='outline-none border-2 border-green-400 md:mt-16' type="text" name="password" id="password" placeholder="password..." autocomplete="off">
+        </div>
+        <div class="w-full text-center h-1/3 mt-5 md:mt-0">
+            <button class="btn text-green-400 border-green-400 border-2 rounded w-28 md:mt-20">Enter</button>
+        </div>
+
+    </div>
+    </div>
+
+    <footer class="text-center p-2">
+        <div class="text-2xl text-green-400">Footer&copy;</div>
+    </footer>
+    
+</body>
+
+
+<script>
+    var btn = document.querySelector(".btn");
+
+    btn.onclick=()=>{
+
+        var user ={
+            username:document.querySelector("input[name='username']").value,
+            password:document.querySelector("input[name='password']").value
+        }
+
+        console.log(user);
+        localStorage.setItem("user",JSON.stringify({user}))
+
+        alert("Awesome, re-directing you now!");
+        window.location="dashboard.html"
+
+    }
+
+
+</script>
+</html>

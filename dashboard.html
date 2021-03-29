@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="public/style.css">
+    <title>MovieDash</title>
+</head>
+<body class='h-screen w-screen'>
+    <header class='text-center p-2'>
+        <h1 class='text-5xl'>Movie Search Site</h1>
+    </header>
+    <div class='p-2 border-b-2 border-black border-black w-4/5 ml-10'>
+        <label class='text-2xl' for="title">Title:</label>
+        <input class='border-2 border-black w-1/2' type="text" name="title" id="title" placeholder="title..." autocomplete="off" autofocus="on">
+        <button class='searchbtn border-black rounded border-2 w-20'>Search</button>
+        <br>
+        <small class="text-base warning text-center text-red-700"></small>
+    </div>
+
+    <div class="text-center p-2">
+        <h3 class="output text-3xl"></h3>
+    </div>
+
+    <div class='overflow-auto topRow h-1/3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-2'></div>
+
+
+    <div class='scrollList p-4'></div>
+
+
+    <footer class='p-2'>
+        <p class='text-2xl text-center'>Footer&copy;</p>
+    </footer>
+    
+
+
+
+    <script>
+        let searchbtn = document.querySelector(".searchbtn");
+        let searchInput = document.querySelector("input[name='title']")
+        let outputDOM = document.querySelector(".output")
+        let warningDOM = document.querySelector(".warning")
+        let topRowDOM = document.querySelector(".topRow")
+        let scrollListDOM = document.querySelector(".scrollList")
+
+        searchbtn.onclick=()=>{
+            console.time("formatTitle")
+
+            var title = searchInput.value
+
+            searchMovie(title)
+
+            
+                var titleArr=[];
+                for(let i = 0;i<title.length;i++){
+                    if(i === 0){
+                        titleArr.push(title[0].toUpperCase())
+                    }
+                   else if(title[i] === " "){
+                        titleArr.push(title[i])
+                        titleArr.push(title[i+1].toUpperCase())
+                    }
+                   else{
+                       titleArr.push(title[i])
+                   } 
+
+                   titleArr.forEach((l,idx)=>{
+                       if(l.toUpperCase() === titleArr[idx-1]){
+                           titleArr.splice(idx,1)
+                       }
+                   })
+                }
+                console.log(titleArr.join(""))
+             outputDOM.innerHTML = `Search for:${titleArr.join("")}`
+            console.timeEnd("formatTitle")
+
+        }
+
+
+
+        searchInput.onkeyup=(e)=>{
+            if(e.target.value[0] === "<"){
+                toggleWarning()
+
+                e.target.value = ""
+                searchInput.value = ""
+            }
+        }
+
+let warning=0;
+        function toggleWarning(){
+            if(warning === 0){
+            warningDOM.innerHTML = "😠😠😠😠"
+            }
+            else{
+                warningDOM.innerHTML = "😡😡😡😡"
+
+            }
+
+            setTimeout(()=>{
+                warningDOM.innerHTML = ""
+            },2000)
+        }
+
+
+
+        function searchMovie(title){
+            fetch(`https://www.omdbapi.com?s=${title}&apikey=trilogy`)
+            .then(res=>res.json())
+            .then(res=>{
+                console.log(res)
+                renderTopRow(res.Search.slice(0,3))
+                renderColumn(res.Search.slice(3,res.Search.length-1))
+            })
+        }
+
+
+        function renderTopRow(data){
+            var html = "<h3 class='text-4xl text-red-500 text-center mb-10'>Top Results </h3>"
+
+            data.forEach(d=>(
+                html += `<div class='text-center'>
+                    <h3 class='text-3xl'>${d.Title}</h3>
+                    <img src=${d.Poster} class='mx-auto h-28 md:h-fill text-center' alt='img'>
+                    </div>`
+            ))
+
+            topRowDOM.innerHTML = html
+
+
+        }
+
+
+        function renderColumn(data){
+            var html = "<h3 class='mb-10 text-2xl text-red-500 text-center'>All Results </h3>"
+
+            data.forEach(d=>(
+                html += `<div class='flex'>
+                    <div>
+                        <img src=${d.Poster} class='mx-auto h-28 md:h-fill text-center' alt='img'>
+                    </div>
+                    <div>
+                    <h3 class='text-3xl'>${d.Title}</h3>
+                    </div>
+                    </div>`
+            ))
+
+            scrollListDOM.innerHTML = html
+
+
+        }
+
+
+        searchMovie("ace ventura")
+
+
+    </script>
+</body>
+</html>
